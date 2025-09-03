@@ -1,6 +1,6 @@
+import { ReactNode } from "react";
 import { View } from "react-native";
 import { useTheme } from "react-native-paper";
-import { ReactNode } from "react";
 
 export default function PageView({ children }: { children: ReactNode }) {
   const theme = useTheme();
@@ -9,7 +9,7 @@ export default function PageView({ children }: { children: ReactNode }) {
     <View
       style={{
         flex: 1,
-        // alignItems: "center",
+        gap: 10,
         padding: 20,
         backgroundColor: theme.colors.background,
       }}

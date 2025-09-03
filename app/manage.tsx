@@ -1,13 +1,9 @@
-import { useState, useEffect } from "react";
-import { ScrollView, View, Alert } from "react-native";
-import { Text, Switch, Button, RadioButton } from "react-native-paper";
-import * as Notifications from "expo-notifications";
 import PageView from "@/components/pageView";
-import {
-  getNotificationSettings,
-  saveNotificationSettings,
-  resetDatabase,
-} from "@/lib/db";
+import { getNotificationSettings, resetDatabase } from "@/lib/db";
+import * as Notifications from "expo-notifications";
+import { useEffect, useState } from "react";
+import { Alert, ScrollView, View } from "react-native";
+import { Button, RadioButton, Switch, Text } from "react-native-paper";
 import { useAppTheme, useMessage } from "./_layout";
 
 export default function ManageScreen() {
@@ -55,7 +51,8 @@ export default function ManageScreen() {
 
       setNotificationId(id);
     } catch (error) {
-      Alert.alert("Error", "Failed to schedule notification");
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      triggerMessage("Error scheduling reminder: " + errorMsg, "error");
       setRemindersEnabled(false);
     }
   };

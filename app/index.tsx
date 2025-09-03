@@ -1,17 +1,17 @@
-import { ScrollView, StyleSheet } from "react-native";
-import { useState, useCallback } from "react";
 import PageView from "@/components/pageView";
-import { Button, Divider, IconButton, List, Text } from "react-native-paper";
 import {
-  getAllHabits,
   addDateToHabit,
   completedToday,
   dueStatus,
+  getAllHabits,
   Habit,
 } from "@/lib/db";
-import { useRouter } from "expo-router";
 import { useFocusEffect } from "@react-navigation/native";
 import * as Notifications from "expo-notifications";
+import { useRouter } from "expo-router";
+import { useCallback, useState } from "react";
+import { ScrollView, StyleSheet } from "react-native";
+import { Button, Divider, IconButton, List, Text } from "react-native-paper";
 
 const sortByFrequency = (habits: Habit[]) => {
   return habits.sort((a, b) => {
@@ -60,7 +60,7 @@ export default function Index() {
   return (
     <PageView>
       <Text variant="titleLarge">Track It</Text>
-      <Button mode="contained-tonal" onPress={() => router.push("./add.tsx")}>
+      <Button mode="contained-tonal" onPress={() => router.push("./add")}>
         Add Habit
       </Button>
       <Divider />
@@ -86,7 +86,12 @@ export default function Index() {
               <IconButton
                 mode="contained-tonal"
                 icon="eye"
-                onPress={() => router.push(`./[id].tsx`)}
+                onPress={() =>
+                  router.push({
+                    pathname: "./[id]",
+                    params: { id: habit.id },
+                  })
+                }
               />
             )}
           />

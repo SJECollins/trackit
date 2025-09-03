@@ -1,8 +1,10 @@
+import { addHabit, getHabitById, Habit, updateHabit } from "@/lib/db";
+import { Picker } from "@react-native-picker/picker";
 import { useFocusEffect, useRouter } from "expo-router";
 import { useCallback, useState } from "react";
+import { StyleSheet, View } from "react-native";
+import { Button, Text, TextInput, useTheme } from "react-native-paper";
 import { useMessage } from "../app/_layout";
-import { getHabitById, addHabit, updateHabit, Habit } from "@/lib/db";
-import { useTheme, Button, TextInput, Text } from "react-native-paper";
 import PageView from "./pageView";
 
 const initialHabitState: Omit<Habit, "id"> = {
@@ -73,7 +75,84 @@ export default function HabitForm({ habitId }: { habitId: string | null }) {
   return (
     <PageView>
       <Text variant="titleLarge">{habitId ? "Edit Habit" : "Add Habit"}</Text>
-      {/* Form fields for title, description, frequency, etc. would go here */}
+      <View style={styles.col}>
+        <Text>Title:</Text>
+        <TextInput
+          label="Title"
+          value={habit.title}
+          onChangeText={(text) => setHabit({ ...habit, title: text })}
+        />
+      </View>
+      <View style={styles.col}>
+        <Text>Description:</Text>
+        <TextInput
+          label="Description"
+          value={habit.description}
+          onChangeText={(text) => setHabit({ ...habit, description: text })}
+        />
+      </View>
+      <View style={styles.col}>
+        <Picker
+          style={{
+            backgroundColor: theme.colors.background,
+            width: "100%",
+          }}
+          mode="dropdown"
+          selectedValue={habit.frequency}
+          onValueChange={(itemValue) =>
+            setHabit({
+              ...habit,
+              frequency: itemValue as
+                | "daily"
+                | "weekly"
+                | "fortnightly"
+                | "monthly"
+                | "yearly",
+            })
+          }
+        >
+          <Picker.Item
+            label="Daily"
+            value="daily"
+            style={{
+              color: theme.colors.primary,
+              backgroundColor: theme.colors.background,
+            }}
+          />
+          <Picker.Item
+            label="Weekly"
+            value="weekly"
+            style={{
+              color: theme.colors.primary,
+              backgroundColor: theme.colors.background,
+            }}
+          />
+          <Picker.Item
+            label="Fortnightly"
+            value="fortnightly"
+            style={{
+              color: theme.colors.primary,
+              backgroundColor: theme.colors.background,
+            }}
+          />
+          <Picker.Item
+            label="Monthly"
+            value="monthly"
+            style={{
+              color: theme.colors.primary,
+              backgroundColor: theme.colors.background,
+            }}
+          />
+          <Picker.Item
+            label="Yearly"
+            value="yearly"
+            style={{
+              color: theme.colors.primary,
+              backgroundColor: theme.colors.background,
+            }}
+          />
+        </Picker>
+      </View>
       <Button
         mode="contained"
         onPress={handleSaveHabit}
@@ -84,3 +163,12 @@ export default function HabitForm({ habitId }: { habitId: string | null }) {
     </PageView>
   );
 }
+
+const styles = StyleSheet.create({
+  col: {
+    justifyContent: "space-between",
+    marginVertical: 10,
+    height: 100,
+    width: "100%",
+  },
+});

@@ -9,6 +9,7 @@ export interface Habit {
   streak: number; // longest streak of habit completion
   remind: boolean;
   paused: boolean;
+  createdAt?: Date;
   trackedDates?: string[]; // dates when habit was completed
 }
 
@@ -32,13 +33,10 @@ export const setupDatabase = () => {
             streak INTEGER NOT NULL,
             remind BOOLEAN NOT NULL,
             paused BOOLEAN NOT NULL,
+            createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
             trackedDates TEXT NOT NULL
-        );`
-  );
-
-  // Add settings table
-  db.execSync(
-    `CREATE TABLE IF NOT EXISTS settings (
+        );
+    CREATE TABLE IF NOT EXISTS settings (
       id INTEGER PRIMARY KEY,
       remindersEnabled BOOLEAN NOT NULL DEFAULT 0,
       reminderFrequency TEXT NOT NULL DEFAULT 'daily',
@@ -145,12 +143,32 @@ export const completedToday = (habit: Habit) => {
 export const checkOverdue = (habit: Habit) => {
   const today = new Date();
   const lastCompleted = habit.trackedDates?.[habit.trackedDates.length - 1];
-  if (!lastCompleted) return true;
+  if (!lastCompleted) {
+    const createdDate = new Date(habit.createdAt || "");
+    const daysSinceCreation = Math.floor(
+      (today.getTime() - createdDate.getTime()) / (1000 * 60 * 60 * 24)
+    );
+
+    switch (habit.frequency) {
+      case "daily":
+        return daysSinceCreation >= 1;
+      case "weekly":
+        return daysSinceCreation >= 7;
+      case "fortnightly":
+        return daysSinceCreation >= 14;
+      case "monthly":
+        return daysSinceCreation >= 30;
+      case "yearly":
+        return daysSinceCreation >= 365;
+    }
+  }
 
   const lastDate = new Date(lastCompleted);
 
   switch (habit.frequency) {
     case "daily":
+      if (today.toDateString() === habit.createdAt?.toDateString())
+        return false;
       return today.toDateString() !== lastDate.toDateString();
     case "weekly": {
       const diff =
@@ -196,19 +214,99 @@ export const dueStatus = (habit: Habit) => {
   }
 };
 
+const formatDate = (date: Date): string => {
+  return date.toISOString().split("T")[0]; // YYYY-MM-DD format
+};
+
+const parseDate = (dateString: string): Date => {
+  return new Date(dateString + "T00:00:00"); // Ensure consistent parsing
+};
+
+const addDays = (date: Date, days: number): Date => {
+  const result = new Date(date);
+  result.setDate(result.getDate() + days);
+  return result;
+};
+
+const getFrequencyInterval = (frequency: Habit["frequency"]): number => {
+  switch (frequency) {
+    case "daily":
+      return 1;
+    case "weekly":
+      return 7;
+    case "fortnightly":
+      return 14;
+    case "monthly":
+      return 30; // Approximate - should maybe fix for actual month lengths
+    case "yearly":
+      return 365; // Approximate - should fix for leap years
+    default:
+      return 1;
+  }
+};
+
+const calculateStreak = (
+  trackedDates: string[],
+  frequency: Habit["frequency"]
+): number => {
+  if (!trackedDates || trackedDates.length === 0) return 0;
+
+  // Sort dates in descending order (most recent first)
+  const sortedDates = [...trackedDates].sort(
+    (a, b) => new Date(b).getTime() - new Date(a).getTime()
+  );
+
+  const today = new Date();
+  const interval = getFrequencyInterval(frequency);
+
+  let streak = 0;
+  let expectedDate = today;
+
+  // Start from today and work backwards
+  for (const dateStr of sortedDates) {
+    const completionDate = parseDate(dateStr);
+    const expectedDateStr = formatDate(expectedDate);
+
+    // Check if this completion is within the expected window
+    const daysDiff = Math.abs(
+      (parseDate(expectedDateStr).getTime() - completionDate.getTime()) /
+        (1000 * 60 * 60 * 24)
+    );
+
+    if (frequency === "daily") {
+      // For daily habits, allow some flexibility (completed today or yesterday counts)
+      if (daysDiff <= 1) {
+        streak++;
+        expectedDate = addDays(expectedDate, -1);
+      } else {
+        break;
+      }
+    } else {
+      // For other frequencies, allow some flexibility around the expected date
+      const tolerance = Math.max(1, Math.floor(interval * 0.2)); // 20% tolerance
+      if (daysDiff <= tolerance) {
+        streak++;
+        expectedDate = addDays(expectedDate, -interval);
+      } else {
+        break;
+      }
+    }
+  }
+
+  return streak;
+};
+
 // Record a date for a habit
 export const addDateToHabit = (id: string, date: string) => {
   const habit = getHabitById(id);
   if (!habit) return;
 
   habit.trackedDates = habit.trackedDates || [];
+  if (habit.trackedDates.includes(date)) return;
   habit.trackedDates.push(date);
-  // If yesterday was tracked, increment the streak
-  if (wasTrackedYesterday(habit.trackedDates)) {
-    habit.streak += 1;
-  } else {
-    habit.streak = 1;
-  }
+
+  habit.streak = calculateStreak(habit.trackedDates, habit.frequency);
+
   updateHabit(id, habit);
 };
 

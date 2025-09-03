@@ -1,11 +1,11 @@
-import { Tabs } from "expo-router";
-import { PaperProvider, MD3DarkTheme, MD3LightTheme } from "react-native-paper";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { createContext, useContext, useEffect, useState } from "react";
 import DisplayMessage from "@/components/displayMessage";
 import { setupDatabase } from "@/lib/db";
-import { Appearance } from "react-native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Tabs } from "expo-router";
 import { StatusBar } from "expo-status-bar";
+import { createContext, useContext, useEffect, useState } from "react";
+import { Appearance } from "react-native";
+import { MD3DarkTheme, MD3LightTheme, PaperProvider } from "react-native-paper";
 
 // Handle theme for app, based on device theme - darkmode by default
 const ThemeContext = createContext<
@@ -114,6 +114,20 @@ function RootLayout() {
                 size={size}
               />
             ),
+          }}
+        />
+        <Tabs.Screen
+          name="add"
+          options={{
+            title: "Add Habit",
+            href: null,
+          }}
+        />
+        <Tabs.Screen
+          name="edit"
+          options={{
+            title: "Edit Habit",
+            href: null,
           }}
         />
         <Tabs.Screen
