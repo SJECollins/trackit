@@ -274,7 +274,6 @@ const calculateStreak = (
     );
 
     if (frequency === "daily") {
-      // For daily habits, allow some flexibility (completed today or yesterday counts)
       if (daysDiff <= 1) {
         streak++;
         expectedDate = addDays(expectedDate, -1);
@@ -282,8 +281,8 @@ const calculateStreak = (
         break;
       }
     } else {
-      // For other frequencies, allow some flexibility around the expected date
-      const tolerance = Math.max(1, Math.floor(interval * 0.2)); // 20% tolerance
+      // 20% tolerance for other frequencies...
+      const tolerance = Math.max(1, Math.floor(interval * 0.2));
       if (daysDiff <= tolerance) {
         streak++;
         expectedDate = addDays(expectedDate, -interval);
