@@ -2,8 +2,9 @@ import PageView from "@/components/pageView";
 import { completedToday, deleteHabit, getHabitById, Habit } from "@/lib/db";
 import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { View } from "react-native";
 import { Button, Divider, Modal, Text } from "react-native-paper";
+import styles from "../assets/styles";
 import { useMessage } from "./_layout";
 
 export default function HabitDetail() {
@@ -74,7 +75,13 @@ export default function HabitDetail() {
       </View>
       <Divider />
       <View style={styles.row}>
-        <Button onPress={() => setModalVisible(false)}>Edit</Button>
+        <Button
+          onPress={() =>
+            router.push({ pathname: "/edit", params: { habitId: habit.id } })
+          }
+        >
+          Edit
+        </Button>
         <Button onPress={() => setModalVisible(true)}>Delete</Button>
       </View>
 
@@ -91,16 +98,3 @@ export default function HabitDetail() {
     </PageView>
   );
 }
-
-const styles = StyleSheet.create({
-  row: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginVertical: 8,
-  },
-  col: {
-    flexDirection: "column",
-    gap: 8,
-  },
-});

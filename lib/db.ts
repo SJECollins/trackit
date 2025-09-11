@@ -140,6 +140,11 @@ export const completedToday = (habit: Habit) => {
   return habit.trackedDates?.includes(today);
 };
 
+export const lastCompleted = (habit: Habit) => {
+  if (!habit.trackedDates || habit.trackedDates.length === 0) return null;
+  return habit.trackedDates[habit.trackedDates.length - 1];
+};
+
 export const checkOverdue = (habit: Habit) => {
   const today = new Date();
   const lastCompleted = habit.trackedDates?.[habit.trackedDates.length - 1];

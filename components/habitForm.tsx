@@ -1,8 +1,9 @@
+import styles from "@/assets/styles";
 import { addHabit, getHabitById, Habit, updateHabit } from "@/lib/db";
 import { Picker } from "@react-native-picker/picker";
 import { useFocusEffect, useRouter } from "expo-router";
 import { useCallback, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { View } from "react-native";
 import { Button, Text, TextInput, useTheme } from "react-native-paper";
 import { useMessage } from "../app/_layout";
 import PageView from "./pageView";
@@ -163,12 +164,3 @@ export default function HabitForm({ habitId }: { habitId: string | null }) {
     </PageView>
   );
 }
-
-const styles = StyleSheet.create({
-  col: {
-    justifyContent: "space-between",
-    marginVertical: 10,
-    height: 100,
-    width: "100%",
-  },
-});
