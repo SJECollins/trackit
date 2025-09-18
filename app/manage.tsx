@@ -1,12 +1,14 @@
+import useStyles from "@/assets/styles";
 import PageView from "@/components/pageView";
 import { getNotificationSettings, resetDatabase } from "@/lib/db";
 import * as Notifications from "expo-notifications";
 import { useEffect, useState } from "react";
 import { Alert, ScrollView, View } from "react-native";
-import { Button, RadioButton, Switch, Text } from "react-native-paper";
+import { Button, Divider, RadioButton, Switch, Text } from "react-native-paper";
 import { useAppTheme, useMessage } from "./_layout";
 
 export default function ManageScreen() {
+  const styles = useStyles();
   const { darkMode, toggleTheme } = useAppTheme();
   const { triggerMessage } = useMessage();
 
@@ -41,7 +43,7 @@ export default function ManageScreen() {
       const id = await Notifications.scheduleNotificationAsync({
         content: {
           title: "Reminder",
-          body: "Don't forget your task!",
+          body: "Check your habits!",
         },
         trigger: {
           seconds:
@@ -62,13 +64,15 @@ export default function ManageScreen() {
       await Notifications.cancelScheduledNotificationAsync(notificationId);
       setNotificationId(null);
     }
-    // TODO: Save enabled=false in SQLite
   };
 
   const toggleReminder = async (value: boolean) => {
     setRemindersEnabled(value);
-    if (value) await scheduleReminder();
-    else await cancelReminder();
+    if (value) {
+      await scheduleReminder();
+    } else {
+      await cancelReminder();
+    }
   };
 
   return (
@@ -123,23 +127,21 @@ export default function ManageScreen() {
             <Text>Monthly</Text>
           </View>
         </RadioButton.Group>
-        <Button
-          mode="contained"
-          onPress={() => {
-            resetDatabase();
-            triggerMessage("Database reset successfully!", "success");
-          }}
-        >
-          Reset Database
-        </Button>
-
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            marginTop: 40,
-          }}
-        >
+        <Divider style={styles.divider} />
+        <View style={styles.btnRow}>
+          <Button
+            mode="contained"
+            style={styles.btn}
+            onPress={() => {
+              resetDatabase();
+              triggerMessage("Database reset successfully!", "success");
+            }}
+          >
+            Reset Database
+          </Button>
+        </View>
+        <Divider style={styles.divider} />
+        <View style={styles.row}>
           <Text variant="titleLarge">Dark Mode</Text>
           <Switch value={darkMode} onValueChange={toggleTheme} />
         </View>

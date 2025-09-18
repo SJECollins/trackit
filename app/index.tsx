@@ -11,9 +11,9 @@ import { useFocusEffect } from "@react-navigation/native";
 import * as Notifications from "expo-notifications";
 import { useRouter } from "expo-router";
 import { useCallback, useState } from "react";
-import { ScrollView } from "react-native";
+import { ScrollView, View } from "react-native";
 import { Button, Divider, IconButton, List, Text } from "react-native-paper";
-import styles from "../assets/styles";
+import useStyles from "../assets/styles";
 
 // const sortByFrequency = (habits: Habit[]) => {
 //   return habits.sort((a, b) => {
@@ -58,6 +58,7 @@ const sortHabits = (habits: Habit[]) => {
 };
 
 export default function Index() {
+  const styles = useStyles();
   const router = useRouter();
   const [habits, setHabits] = useState<Habit[]>([]);
 
@@ -90,11 +91,19 @@ export default function Index() {
 
   return (
     <PageView>
-      <Text variant="titleLarge">Track It</Text>
-      <Button mode="contained-tonal" onPress={() => router.push("./add")}>
-        Add Habit
-      </Button>
-      <Divider />
+      <Text variant="headlineLarge" style={styles.title}>
+        Track It
+      </Text>
+      <View style={styles.btnRow}>
+        <Button
+          style={styles.btn}
+          mode="contained-tonal"
+          onPress={() => router.push("./add")}
+        >
+          Add Habit
+        </Button>
+      </View>
+      <Divider style={styles.divider} />
       <ScrollView style={styles.container}>
         {habits.map((habit) => (
           <List.Item

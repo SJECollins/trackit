@@ -1,4 +1,4 @@
-import styles from "@/assets/styles";
+import useStyles from "@/assets/styles";
 import { addHabit, getHabitById, Habit, updateHabit } from "@/lib/db";
 import { Picker } from "@react-native-picker/picker";
 import { useFocusEffect, useRouter } from "expo-router";
@@ -19,6 +19,7 @@ const initialHabitState: Omit<Habit, "id"> = {
 };
 
 export default function HabitForm({ habitId }: { habitId: string | null }) {
+  const styles = useStyles();
   const router = useRouter();
   const { triggerMessage } = useMessage();
   const theme = useTheme();
@@ -154,13 +155,11 @@ export default function HabitForm({ habitId }: { habitId: string | null }) {
           />
         </Picker>
       </View>
-      <Button
-        mode="contained"
-        onPress={handleSaveHabit}
-        style={{ marginTop: 16 }}
-      >
-        {habitId ? "Update Habit" : "Add Habit"}
-      </Button>
+      <View style={styles.btnRow}>
+        <Button mode="contained" onPress={handleSaveHabit} style={styles.btn}>
+          {habitId ? "Update Habit" : "Add Habit"}
+        </Button>
+      </View>
     </PageView>
   );
 }
