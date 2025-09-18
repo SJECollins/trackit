@@ -18,6 +18,7 @@ export interface AppSettings {
   remindersEnabled: boolean;
   reminderFrequency: "daily" | "weekly" | "monthly";
   notificationId: string | null;
+  reminderTime: string | null;
 }
 
 const db = SQLite.openDatabaseSync("habits.db");
@@ -40,7 +41,8 @@ export const setupDatabase = () => {
       id INTEGER PRIMARY KEY,
       remindersEnabled BOOLEAN NOT NULL DEFAULT 0,
       reminderFrequency TEXT NOT NULL DEFAULT 'daily',
-      notificationId TEXT
+      notificationId TEXT,
+      reminderTime TEXT DEFAULT '09:00'
     );`
   );
 
@@ -50,7 +52,7 @@ export const setupDatabase = () => {
   );
   if (settingsCount?.count === 0) {
     db.runSync(
-      `INSERT INTO settings (id, remindersEnabled, reminderFrequency, notificationId) VALUES (1, 0, 'daily', NULL);`
+      `INSERT INTO settings (id, remindersEnabled, reminderFrequency, notificationId, reminderTime) VALUES (1, 0, 'daily', NULL, '09:00');`
     );
   }
 };
@@ -327,6 +329,7 @@ export const getNotificationSettings = (): AppSettings => {
     remindersEnabled: Boolean(result?.remindersEnabled),
     reminderFrequency: result?.reminderFrequency || "daily",
     notificationId: result?.notificationId || null,
+    reminderTime: result?.reminderTime || null,
   };
 };
 
@@ -334,11 +337,12 @@ export const getNotificationSettings = (): AppSettings => {
 export const saveNotificationSettings = (
   remindersEnabled: boolean,
   reminderFrequency: "daily" | "weekly" | "monthly",
-  notificationId: string | null
+  notificationId: string | null,
+  reminderTime: string | null
 ) => {
   db.runSync(
-    `UPDATE settings SET remindersEnabled = ?, reminderFrequency = ?, notificationId = ? WHERE id = 1;`,
-    [remindersEnabled ? 1 : 0, reminderFrequency, notificationId]
+    `UPDATE settings SET remindersEnabled = ?, reminderFrequency = ?, notificationId = ?, reminderTime = ? WHERE id = 1;`,
+    [remindersEnabled ? 1 : 0, reminderFrequency, notificationId, reminderTime]
   );
 };
 

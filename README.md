@@ -1,50 +1,81 @@
-# Welcome to your Expo app 👋
+# TRACK IT
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Habit tracking app built with [Expo](https://expo.dev).
 
-## Get started
+## Features
 
-1. Install dependencies
+#### Habits
 
-   ```bash
-   npm install
-   ```
+Add and edit habits you want to track (with a brief description).
+The screen displaying details of a habit shows the name, brief description and the last time completed.
+There are options to complete, edit or delete the habit on the details page.
+React native calendars is used to visualise dates when the habit has been completed on a caledar.
 
-2. Start the app
+#### Habit List
 
-   ```bash
-   npx expo start
-   ```
+The index lists each habit by incomplete to complete (then frequency so daily ones come first).
+From the index you can view the details of the habit or mark the habit as completed.
+The last time the habit was completed is visible in this list.
+The habit appearance changes if overdue.
 
-In the output, you'll find options to open the app in a
+#### Notifications
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+The user can enable notifications to remind them to check in daily/weekly/monthly. Not per habit as that might overdo things if you have multiple daily habits.
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+TODO: test notification timing
 
-## Get a fresh project
+## Dependencies
 
-When you're ready, run:
+- [react-native-paper](https://reactnativepaper.com/)
+- [react-native-picker](https://www.npmjs.com/package/@react-native-picker/picker)
+- [react-native-calendars](https://www.npmjs.com/package/react-native-calendars)
 
-```bash
-npm run reset-project
+## Issues
+
+<sub>Notes for myself on some issues I ran into.</sub>
+
+### Calendar background
+
+Found it hard to get the background colour of the calendar cells to match the theme background colour instead of just staying white. Solution which worked was setting style background colour to transparent and then the theme calendar background to the actual theme background colour.
+
+```
+<Calendar
+   style={{ backgroundColor: "transparent" }}
+   theme={{ calendarBackground: theme.colors.background }}
+/>
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### Picker background <sub>Not really resolved</sub>
 
-## Learn more
+Picker background colour is difficult to match the background colour of theme, particular in the default mode. Using **dropdown** mode removes top and bottom bars of the default colour and works best with using the theme background.
 
-To learn more about developing your project with Expo, look at the following resources:
+```
+<Picker mode="dropdown">
+```
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+## Running the App Yourself
 
-## Join the community
+### Fork the repo
 
-Join our community of developers creating universal apps.
+>     Select "Fork" > "Create a new fork" to create a copy of the repo under your own account
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+### Clone the repo
+
+To clone the app locally, in your terminal:
+
+>     git clone https://github.com/username/reponame.git
+
+- the url depends on whether cloning from your own fork or this repository
+
+### Run the app
+
+- Open the project in your editor
+- Install dependencies with:
+
+>     npm install
+
+- Run the app with:
+
+>     npx expo start
+
+**Important**: This project uses expo-sqlite and initializes a database on startup so a physical phone is needed. [Expo Go](https://expo.dev/go) can be downloaded from the Google Play or App Store to connect your device and run the app.
