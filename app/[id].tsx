@@ -90,16 +90,18 @@ export default function HabitDetail() {
     return diffInMonths + 1; // +1 to include the current month
   };
 
+  const capitalise = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+
   return (
-    <PageView>
+    <PageView mode="scroll">
       <View style={styles.col}>
         <Text variant="headlineLarge" style={styles.title}>
           {habit.title}
         </Text>
         <Text variant="bodyMedium">{habit.description}</Text>
-        <Text variant="bodyMedium">Frequency: {habit.frequency}</Text>
-      </View>
-      <View style={styles.col}>
+        <Text variant="bodyMedium">
+          Frequency: {capitalise(habit.frequency)}
+        </Text>
         {habit.trackedDates?.length === 0 ? (
           <Text variant="bodyMedium">Last Completed: Never</Text>
         ) : completedToday(habit) ? (

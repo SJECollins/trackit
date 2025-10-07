@@ -38,12 +38,14 @@ export default function HabitForm({ habitId }: { habitId: string | null }) {
             remind: habit.remind,
             paused: habit.paused,
           });
+          return;
         }
       } catch (error) {
         const errorMsg = error instanceof Error ? error.message : String(error);
         triggerMessage("Error loading habit: " + errorMsg, "error");
       }
     }
+    setHabit(initialHabitState);
   };
 
   useFocusEffect(
@@ -75,7 +77,7 @@ export default function HabitForm({ habitId }: { habitId: string | null }) {
   };
 
   return (
-    <PageView>
+    <PageView mode="scroll">
       <Text variant="titleLarge">{habitId ? "Edit Habit" : "Add Habit"}</Text>
       <View style={styles.col}>
         <Text>Title:</Text>

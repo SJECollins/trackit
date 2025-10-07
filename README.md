@@ -79,3 +79,21 @@ To clone the app locally, in your terminal:
 >     npx expo start
 
 **Important**: This project uses expo-sqlite and initializes a database on startup so a physical phone is needed. [Expo Go](https://expo.dev/go) can be downloaded from the Google Play or App Store to connect your device and run the app.
+
+## Building the App
+
+[Expo docs on building](https://docs.expo.dev/build/setup/)
+
+### Quick ref for building locally:
+
+In the terminal:
+
+```
+eas build --platform android --profile preview --local
+```
+
+<sub>--platform flag sets platform</sub>
+<sub>--profile flag sets build profile based on [eas.json](/eas.json) config</sub>
+<sub>--local flag builds locally to avoid using build credits!</sub>
+
+Outputs .apk to root of project. Transfer to android via file transfer (with developer settings active) and install.

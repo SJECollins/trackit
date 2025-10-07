@@ -90,7 +90,7 @@ export default function Index() {
   };
 
   return (
-    <PageView>
+    <PageView mode="fixed">
       <Text variant="headlineLarge" style={styles.title}>
         Track It
       </Text>
@@ -110,6 +110,7 @@ export default function Index() {
             key={habit.id}
             title={habit.title}
             titleStyle={styles[dueStatus(habit)]}
+            style={styles.listItem}
             description={
               lastCompleted(habit)
                 ? `Last done: ${new Date(

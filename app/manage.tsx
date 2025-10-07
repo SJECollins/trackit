@@ -224,7 +224,7 @@ export default function ManageScreen() {
   };
 
   return (
-    <PageView>
+    <PageView mode="scroll">
       <ScrollView style={{ flex: 1, padding: 10 }}>
         {/* Reminders Toggle */}
         <View

@@ -25,11 +25,14 @@ const useStyles = () => {
       textShadowColor: "green",
     },
     normal: {
-      // default style for normal status
+      marginVertical: 0,
     },
     overdue: {
       fontStyle: "italic",
       color: "red",
+    },
+    listItem: {
+      marginVertical: -8,
     },
     row: {
       flexDirection: "row",
@@ -39,12 +42,12 @@ const useStyles = () => {
     },
     col: {
       justifyContent: "space-evenly",
-      marginVertical: 10,
+      marginVertical: 16,
       minHeight: 80,
       width: "100%",
     },
     divider: {
-      marginVertical: 10,
+      marginVertical: 16,
     },
     btn: {
       marginTop: 10,

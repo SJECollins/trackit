@@ -14,7 +14,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#171418"
       },
       "edgeToEdgeEnabled": true,
       "package": "com.scollins.TrackIt"
@@ -29,15 +29,25 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
+          "image": "./assets/images/splash.png",
           "imageWidth": 200,
           "resizeMode": "contain",
-          "backgroundColor": "#ffffff"
+          "backgroundColor": "#fffbff",
+          "dark": {
+            "image": "./assets/images/splash-dark.png",
+            "backgroundColor": "#171418"
+          }
         }
       ]
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "c4023d79-79b2-48bb-b041-13f84d599b37"
+      }
     }
   }
 }
